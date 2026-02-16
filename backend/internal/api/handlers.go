@@ -11,13 +11,15 @@ import (
 )
 
 type Handlers struct {
-	Hub      *hub.Hub
-	Registry *ws.ClientRegistry
-	AI       game.AIHandler
+	Hub          *hub.Hub
+	Registry     *ws.ClientRegistry
+	AI           game.AIHandler
+	GamePassword string
 }
 
 type createGameRequest struct {
 	PlayerName string `json:"playerName"`
+	Password   string `json:"password"`
 }
 
 type createGameResponse struct {
@@ -32,6 +34,11 @@ func (h *Handlers) CreateGame(w http.ResponseWriter, r *http.Request) {
 		httpError(w, "invalid request", http.StatusBadRequest)
 		return
 	}
+	if h.GamePassword != "" && req.Password != h.GamePassword {
+		httpError(w, "wrong password", http.StatusUnauthorized)
+		return
+	}
+
 	req.PlayerName = strings.TrimSpace(req.PlayerName)
 	if req.PlayerName == "" {
 		httpError(w, "name required", http.StatusBadRequest)

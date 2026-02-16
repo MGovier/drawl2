@@ -140,7 +140,8 @@ body {
 }
 
 /* Inputs */
-input[type="text"] {
+input[type="text"],
+input[type="password"] {
   padding: 12px 16px;
   border: 2px solid var(--surface2);
   border-radius: var(--radius);

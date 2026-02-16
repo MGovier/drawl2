@@ -29,7 +29,7 @@ func (h *Handler) GuessDrawing(imageDataURL string) (string, error) {
 				"content": []map[string]any{
 					{
 						"type": "input_text",
-						"text": "This is a drawing from a Pictionary-like game. What is this a drawing of? Reply with just 1-3 words, no punctuation.",
+						"text": "This is a drawing from a telephone/Pictionary party game. The prompts are often funny phrases, British expressions, mild innuendos, silly situations, or absurd scenarios. What is this a drawing of? Reply with a short phrase (1-5 words), no punctuation. Be creative and don't be afraid to guess something funny or cheeky.",
 					},
 					{
 						"type":      "input_image",

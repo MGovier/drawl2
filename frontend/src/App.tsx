@@ -19,13 +19,17 @@ export default function App() {
     useCallback((msg) => dispatch({ type: 'ws_message', msg }), [dispatch])
   );
 
-  const handleCreateGame = async (name: string) => {
+  const handleCreateGame = async (name: string, password: string) => {
     const res = await fetch('/api/games', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ playerName: name }),
+      body: JSON.stringify({ playerName: name, password }),
     });
-    if (!res.ok) return;
+    if (!res.ok) {
+      const err = await res.json();
+      dispatch({ type: 'ws_message', msg: { type: 'error', data: { message: err.error } } });
+      return;
+    }
     const data = await res.json();
     dispatch({ type: 'set_connection', code: data.code, playerId: data.playerId });
     connect(data.token, data.code);

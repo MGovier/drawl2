@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 interface Props {
-  onCreateGame: (name: string) => void;
+  onCreateGame: (name: string, password: string) => void;
   onJoinGame: (name: string, code: string) => void;
   error: string;
 }
@@ -9,10 +9,11 @@ interface Props {
 export function Home({ onCreateGame, onJoinGame, error }: Props) {
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
+  const [password, setPassword] = useState('');
   const [mode, setMode] = useState<'menu' | 'create' | 'join'>('menu');
 
   const handleCreate = () => {
-    if (name.trim()) onCreateGame(name.trim());
+    if (name.trim()) onCreateGame(name.trim(), password);
   };
 
   const handleJoin = () => {
@@ -46,6 +47,12 @@ export function Home({ onCreateGame, onJoinGame, error }: Props) {
             onChange={e => setName(e.target.value)}
             maxLength={20}
             autoFocus
+          />
+          <input
+            type="password"
+            placeholder="Game password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleCreate()}
           />
           <div className="form-buttons">

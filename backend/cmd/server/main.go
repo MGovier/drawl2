@@ -24,10 +24,15 @@ func main() {
 		log.Printf("No OPENAI_API_KEY set — AI players will use placeholders")
 	}
 
+	gamePassword := os.Getenv("GAME_PASSWORD")
+	if gamePassword != "" {
+		log.Printf("Game creation password is set")
+	}
+
 	h := hub.New()
 	registry := ws.NewClientRegistry()
 	wsHandler := ws.NewHandler(h, registry)
-	handlers := &api.Handlers{Hub: h, Registry: registry, AI: aiHandler}
+	handlers := &api.Handlers{Hub: h, Registry: registry, AI: aiHandler, GamePassword: gamePassword}
 	router := api.NewRouter(h, registry, wsHandler, handlers)
 
 	log.Printf("Starting server on :%s", port)

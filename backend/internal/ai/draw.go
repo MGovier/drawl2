@@ -17,7 +17,7 @@ func (h *Handler) DrawPrompt(prompt string) (string, error) {
 
 	body := map[string]any{
 		"model":   "gpt-image-1-mini",
-		"prompt":  fmt.Sprintf("You are imitating a human (with low skill) drawing a basic illustration on a small whiteboard with only black, blue, red and green whiteboard marker pens as part of a drawing game. You need to draw an image representing '%s'. Only show the finished drawing, not the whiteboard or pen/hand. Do not use text.", prompt),
+		"prompt":  fmt.Sprintf("You are a human playing a Pictionary-style game drawing a basic illustration on a small whiteboard with only black, blue, red, yellow and green marker pens. You need to draw an image representing '%s'. Only show the finished drawing, not the whiteboard or pen/hand. Do not use text.", prompt),
 		"n":       1,
 		"size":    "1024x1024",
 		"quality": "low",
