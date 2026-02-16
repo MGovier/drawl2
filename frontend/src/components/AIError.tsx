@@ -24,9 +24,6 @@ export function AIError({ message, onRestart }: Props) {
       </div>
       <h2 className="ai-error-title">AI Player Failed</h2>
       <p className="ai-error-message">{message}</p>
-      <p className="ai-error-hint">
-        Check that OPENAI_API_KEY is set and valid on the server.
-      </p>
       <button className="btn btn-primary" onClick={onRestart}>
         Back to Home
       </button>

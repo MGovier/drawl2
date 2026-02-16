@@ -22,8 +22,7 @@ func (h *Handler) GuessDrawing(imageDataURL string) (string, error) {
 	}
 
 	body := map[string]any{
-		"model":             "gpt-5-mini",
-		"max_output_tokens": 200,
+		"model": "gpt-5-mini",
 		"input": []map[string]any{
 			{
 				"role": "user",
