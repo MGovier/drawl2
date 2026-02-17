@@ -9,11 +9,14 @@ interface Props {
 export function Home({ onCreateGame, onJoinGame, error }: Props) {
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
-  const [password, setPassword] = useState('');
+  const [accessCode, setAccessCode] = useState(() => localStorage.getItem('drawl-access-code') || '');
   const [mode, setMode] = useState<'menu' | 'create' | 'join'>('menu');
 
   const handleCreate = () => {
-    if (name.trim()) onCreateGame(name.trim(), password);
+    if (name.trim()) {
+      localStorage.setItem('drawl-access-code', accessCode);
+      onCreateGame(name.trim(), accessCode);
+    }
   };
 
   const handleJoin = () => {
@@ -49,10 +52,10 @@ export function Home({ onCreateGame, onJoinGame, error }: Props) {
             autoFocus
           />
           <input
-            type="password"
-            placeholder="Game password"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
+            type="text"
+            placeholder="Access code"
+            value={accessCode}
+            onChange={e => setAccessCode(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleCreate()}
           />
           <div className="form-buttons">
