@@ -13,7 +13,6 @@ func CORSMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		w.Header().Set("Content-Type", "application/json")
 		next.ServeHTTP(w, r)
 	})
 }
