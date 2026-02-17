@@ -53,6 +53,7 @@ export default function App() {
 
   const handleGoHome = () => {
     disconnect();
+    window.history.replaceState({}, '', '/');
     dispatch({ type: 'set_screen', screen: 'home' });
   };
 

@@ -7,10 +7,14 @@ interface Props {
 }
 
 export function Home({ onCreateGame, onJoinGame, error }: Props) {
+  const [joinCode] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return (params.get('join') || '').toUpperCase();
+  });
   const [name, setName] = useState('');
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(joinCode);
   const [accessCode, setAccessCode] = useState(() => localStorage.getItem('drawl-access-code') || '');
-  const [mode, setMode] = useState<'menu' | 'create' | 'join'>('menu');
+  const [mode, setMode] = useState<'menu' | 'create' | 'join'>(joinCode ? 'join' : 'menu');
 
   const handleCreate = () => {
     if (name.trim()) {

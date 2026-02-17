@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Player } from '../lib/protocol';
 import { PlayerList } from './PlayerList';
 
@@ -13,6 +14,16 @@ interface Props {
 
 export function Lobby({ code, players, hostId, playerId, onStart, onAddAI, onKick }: Props) {
   const isHost = playerId === hostId;
+  const [copied, setCopied] = useState(false);
+
+  const shareLink = `${window.location.origin}?join=${code}`;
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(shareLink).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
 
   return (
     <div className="lobby">
@@ -21,6 +32,9 @@ export function Lobby({ code, players, hostId, playerId, onStart, onAddAI, onKic
         <span className="code-label">Code:</span>
         <span className="code-value">{code}</span>
       </div>
+      <button className="btn btn-secondary btn-share" onClick={handleCopyLink}>
+        {copied ? 'Copied!' : 'Copy invite link'}
+      </button>
       <p className="player-count">{players.length} / 8 players</p>
 
       <PlayerList
