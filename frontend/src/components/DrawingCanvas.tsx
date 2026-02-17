@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback, useEffect, useImperativeHandle, forwardRef } from 'react';
 import { Stroke, Point, redrawCanvas, drawStroke } from '../lib/canvas';
 
 const COLORS = ['#000000', '#ff0000', '#0000ff', '#00aa00', '#ff8800', '#8800ff', '#00aaaa', '#888888'];
@@ -6,12 +6,16 @@ const SIZES = [3, 6, 12, 20];
 const CANVAS_W = 600;
 const CANVAS_H = 600;
 
+export interface DrawingCanvasHandle {
+  submit: () => void;
+}
+
 interface Props {
   prompt: string;
   onSubmit: (dataUrl: string) => void;
 }
 
-export function DrawingCanvas({ prompt, onSubmit }: Props) {
+export const DrawingCanvas = forwardRef<DrawingCanvasHandle, Props>(function DrawingCanvas({ prompt, onSubmit }, ref) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [strokes, setStrokes] = useState<Stroke[]>([]);
   const [currentStroke, setCurrentStroke] = useState<Point[]>([]);
@@ -87,11 +91,13 @@ export function DrawingCanvas({ prompt, onSubmit }: Props) {
     setStrokes([]);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     onSubmit(canvas.toDataURL('image/png'));
-  };
+  }, [onSubmit]);
+
+  useImperativeHandle(ref, () => ({ submit: handleSubmit }), [handleSubmit]);
 
   return (
     <div className="drawing-area">
@@ -154,4 +160,4 @@ export function DrawingCanvas({ prompt, onSubmit }: Props) {
       </button>
     </div>
   );
-}
+});

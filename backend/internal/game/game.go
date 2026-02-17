@@ -1,6 +1,7 @@
 package game
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -324,32 +325,29 @@ func (g *Game) handleAITurn(info TurnInfo) {
 	}
 
 	var result string
-	var aiErr error
 	if info.TurnType == TurnGuess {
 		log.Printf("[game] AI %q guessing drawing (round %d, chain %d, prompt_size=%d)",
 			playerName, g.State.Round, info.ChainIdx, len(info.Prompt))
-		result, aiErr = ai.GuessDrawing(info.Prompt)
-		if aiErr != nil {
-			log.Printf("[game] AI %q guess failed: %v", playerName, aiErr)
-			result = "???"
+		var err error
+		result, err = ai.GuessDrawing(info.Prompt)
+		if err != nil {
+			log.Printf("[game] AI %q guess failed, using original prompt: %v", playerName, err)
+			// Fall back to the chain's original word
+			result = g.State.Chains[info.ChainIdx].OriginalWord
 		}
 	} else {
 		log.Printf("[game] AI %q drawing prompt=%q (round %d, chain %d)",
 			playerName, info.Prompt, g.State.Round, info.ChainIdx)
-		result, aiErr = ai.DrawPrompt(info.Prompt)
-		if aiErr != nil {
-			log.Printf("[game] AI %q draw failed: %v", playerName, aiErr)
-			result = ""
+		var err error
+		result, err = ai.DrawPrompt(info.Prompt)
+		if err != nil {
+			log.Printf("[game] AI %q draw failed, using fallback: %v", playerName, err)
+			// Fall back to the most recent drawing in the chain, or a placeholder
+			result = aiFallbackDrawing(g.State.Chains[info.ChainIdx])
 		}
 	}
 
 	g.mu.Lock()
-	if aiErr != nil {
-		g.broadcast(OutgoingMessage{Type: MsgAIError, Data: map[string]string{
-			"playerName": playerName,
-			"message":    fmt.Sprintf("AI player %q failed: %v", playerName, aiErr),
-		}})
-	}
 	defer g.mu.Unlock()
 	if info.TurnType == TurnDraw {
 		g.State.SubmitDrawing(info.PlayerID, result)
@@ -358,6 +356,30 @@ func (g *Game) handleAITurn(info TurnInfo) {
 	}
 	g.submitted[info.PlayerID] = true
 	g.checkRoundComplete()
+}
+
+// aiFallbackDrawing returns the most recent drawing in the chain, or a
+// small placeholder SVG of a broken robot if no previous drawing exists.
+func aiFallbackDrawing(chain *Chain) string {
+	for i := len(chain.Entries) - 1; i >= 0; i-- {
+		if chain.Entries[i].Type == TurnDraw && chain.Entries[i].Drawing != "" {
+			return chain.Entries[i].Drawing
+		}
+	}
+	// Minimal inline SVG placeholder
+	svg := `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">` +
+		`<rect width="200" height="200" fill="#fff"/>` +
+		`<rect x="60" y="40" width="80" height="60" rx="10" fill="#888"/>` +
+		`<rect x="70" y="110" width="60" height="50" rx="5" fill="#888"/>` +
+		`<circle cx="82" cy="65" r="8" fill="#fff"/>` +
+		`<circle cx="118" cy="65" r="8" fill="#fff"/>` +
+		`<line x1="82" y1="82" x2="118" y2="82" stroke="#fff" stroke-width="3" stroke-dasharray="6,4"/>` +
+		`<line x1="55" y1="120" x2="40" y2="145" stroke="#888" stroke-width="6" stroke-linecap="round"/>` +
+		`<line x1="145" y1="120" x2="155" y2="100" stroke="#888" stroke-width="6" stroke-linecap="round"/>` +
+		`<line x1="155" y1="100" x2="165" y2="115" stroke="#888" stroke-width="6" stroke-linecap="round"/>` +
+		`<text x="100" y="185" text-anchor="middle" font-size="14" fill="#888">AI broke</text>` +
+		`</svg>`
+	return "data:image/svg+xml;base64," + base64.StdEncoding.EncodeToString([]byte(svg))
 }
 
 const maxDrawingBytes = 5 * 1024 * 1024 // 5MB max for drawing data URLs

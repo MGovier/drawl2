@@ -1,5 +1,6 @@
+import { useRef, useEffect } from 'react';
 import { TURN_DRAW } from '../lib/protocol';
-import { DrawingCanvas } from './DrawingCanvas';
+import { DrawingCanvas, DrawingCanvasHandle } from './DrawingCanvas';
 import { GuessInput } from './GuessInput';
 import { Timer } from './Timer';
 
@@ -20,6 +21,14 @@ export function GamePlay({
   timeRemaining, timeLimit, waiting,
   onSubmitDrawing, onSubmitGuess,
 }: Props) {
+  const canvasRef = useRef<DrawingCanvasHandle>(null);
+
+  useEffect(() => {
+    if (timeRemaining <= 0 && !waiting && turnType === TURN_DRAW) {
+      canvasRef.current?.submit();
+    }
+  }, [timeRemaining, waiting, turnType]);
+
   return (
     <div className="gameplay">
       <div className="round-info">
@@ -34,7 +43,7 @@ export function GamePlay({
           <p>Waiting for other players...</p>
         </div>
       ) : turnType === TURN_DRAW ? (
-        <DrawingCanvas prompt={prompt} onSubmit={onSubmitDrawing} />
+        <DrawingCanvas ref={canvasRef} prompt={prompt} onSubmit={onSubmitDrawing} />
       ) : (
         <GuessInput drawingDataUrl={prompt} onSubmit={onSubmitGuess} />
       )}
