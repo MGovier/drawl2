@@ -26,6 +26,7 @@ export interface GameState {
   chains: Chain[];
   scores: Record<string, number>;
   favDrawing: string;
+  votingDone: boolean;
   error: string;
   aiError: string;
 }
@@ -46,6 +47,7 @@ const initialState: GameState = {
   chains: [],
   scores: {},
   favDrawing: '',
+  votingDone: false,
   error: '',
   aiError: '',
 };
@@ -124,12 +126,13 @@ function handleWSMessage(state: GameState, msg: ServerMessage): GameState {
     case MSG_ROUND_COMPLETE:
       return { ...state, round: msg.data.round };
     case MSG_GAME_OVER:
-      return { ...state, screen: 'reveal', chains: msg.data.chains, scores: msg.data.scores || state.scores, waiting: false, favDrawing: '' };
+      return { ...state, screen: 'reveal', chains: msg.data.chains, scores: msg.data.scores || state.scores, waiting: false, favDrawing: '', votingDone: false };
     case MSG_SCORE_UPDATE:
       return {
         ...state,
         scores: msg.data.scores || state.scores,
         favDrawing: msg.data.favDrawing || state.favDrawing,
+        votingDone: msg.data.votingDone || state.votingDone,
       };
     case MSG_RETURN_TO_LOBBY:
       return {
@@ -141,6 +144,7 @@ function handleWSMessage(state: GameState, msg: ServerMessage): GameState {
         waiting: false,
         chains: [],
         favDrawing: '',
+        votingDone: false,
       };
     case MSG_AI_ERROR:
       return { ...state, screen: 'ai_error', aiError: msg.data.message };

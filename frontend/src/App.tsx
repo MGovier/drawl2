@@ -100,6 +100,7 @@ export default function App() {
           playerId={state.playerId}
           hostId={state.hostId}
           favDrawing={state.favDrawing}
+          votingDone={state.votingDone}
           waiting={state.waiting}
           onSubmitVotes={(successChains, favDrawing) => send(MSG_SUBMIT_VOTES, { successChains, favDrawing })}
           onPlayAgain={() => send(MSG_PLAY_AGAIN)}

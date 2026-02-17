@@ -495,8 +495,9 @@ func (g *Game) checkAllVotesIn() {
 	}
 
 	g.broadcast(OutgoingMessage{Type: MsgScoreUpdate, Data: map[string]interface{}{
-		"scores":     g.State.Scores,
-		"favDrawing": bestKey,
+		"scores":      g.State.Scores,
+		"favDrawing":  bestKey,
+		"votingDone":  true,
 	}})
 }
 

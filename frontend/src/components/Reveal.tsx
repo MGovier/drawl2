@@ -10,19 +10,19 @@ interface Props {
   playerId: string;
   hostId: string;
   favDrawing: string;
+  votingDone: boolean;
   waiting: boolean;
   onSubmitVotes: (successChains: number[], favDrawing: string) => void;
   onPlayAgain: () => void;
   onHome: () => void;
 }
 
-export function Reveal({ chains, players, scores, playerId, hostId, favDrawing, waiting, onSubmitVotes, onPlayAgain, onHome }: Props) {
+export function Reveal({ chains, players, scores, playerId, hostId, favDrawing, votingDone, waiting, onSubmitVotes, onPlayAgain, onHome }: Props) {
   const [selectedChains, setSelectedChains] = useState<Set<number>>(new Set());
   const [selectedFav, setSelectedFav] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const isHost = playerId === hostId;
   const isWaiting = submitted || waiting;
-  const votingDone = !!favDrawing;
 
   const toggleChain = (idx: number) => {
     setSelectedChains(prev => {

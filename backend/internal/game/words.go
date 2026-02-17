@@ -3,61 +3,71 @@ package game
 import "math/rand"
 
 var wordList = []string{
-	// UK expressions & slang
-	"dodgy kebab", "full English", "cheeky Nando's", "bog roll",
-	"wobbly trolley", "jammie dodger", "ploughman's lunch",
-	"beer garden", "chip butty", "mushy peas", "spotted dick",
-	"sticky toffee pudding", "pie and mash", "Sunday roast", "cream tea",
-	"lost the plot", "taking the mick", "having a kip", "throwing a wobbly",
-	"off your trolley", "knees up", "bee's knees", "dog's dinner",
-	"cat's pyjamas", "a right muppet", "gobsmacked pigeon", "chuffed to bits",
+	// Food & drink
+	"fish and chips", "cup of tea", "Sunday roast", "full English",
+	"cream tea", "sausage roll", "pork pie", "Cornish pasty",
+	"bacon sandwich", "beans on toast", "crumpet", "scone",
+	"trifle", "mince pie", "Yorkshire pudding", "shepherd's pie",
+	"bangers and mash", "ice cream van", "fish finger sandwich",
+	"jam doughnut", "birthday cake", "cheese toastie",
 
-	// Cheeky double meanings (safe for image generation)
-	"spotted woodpecker", "booby trap", "releasing the kraken",
-	"love handles", "hot cross buns", "peacock", "a handful",
-	"winner's trophy", "blowing a raspberry", "stuffed turkey",
-	"plucking a chicken", "tossing a pancake", "great tits on a branch",
-	"a cracking pair of eggs", "the family jewels", "a wobbly sausage roll",
-	"a moist cake", "battered cod", "shaking the coconut tree", "banana split",
+	// British landmarks & places
+	"Big Ben", "London Eye", "Tower Bridge", "Buckingham Palace",
+	"Stonehenge", "red phone box", "double decker bus", "black cab",
+	"the Shard", "Brighton pier", "castle", "lighthouse",
+	"church spire", "village green", "cricket pitch", "canal boat",
+	"post box", "pub", "chippy", "corner shop",
 
-	// Funny situations
-	"man vs seagull", "uncle dancing at a wedding", "stepping on Lego",
-	"pigeons fighting over chips", "cat on a Roomba", "sunburnt tourist",
-	"dad at a barbecue", "falling off a chair", "angry goose chase",
-	"slipping on a banana", "dog stealing a sausage", "bad hair day",
-	"nana on the dance floor", "crying at the pub", "kebab at 3am",
-	"seagull stealing ice cream", "wasp at a picnic", "toilet out of paper",
-	"missing the bus", "wrong Zoom call", "burnt toast", "flat tyre",
+	// Weather & outdoors
+	"rainbow", "rainy barbecue", "umbrella", "puddle jumping",
+	"snowman", "muddy wellies", "thunderstorm", "deckchair",
+	"rockpool", "sandcastle", "bonfire", "conker",
+	"kite flying", "picnic blanket", "camping tent", "caravan",
 
-	// Pop culture & absurd
-	"Bigfoot on holiday", "ghost driving a bus", "alien at Tesco",
-	"vampire at the dentist", "the Loch Ness Monster", "wizard in Primark",
-	"dinosaur at a rave", "mermaid with legs", "unicorn traffic jam",
-	"robot doing yoga", "Elvis at the chippy", "ninja librarian",
-	"pirate accountant", "zombie wedding", "cowboy plumber",
+	// Animals
+	"angry swan", "fox", "hedgehog", "robin",
+	"corgi", "sheepdog", "Highland cow", "badger",
+	"seagull stealing chips", "squirrel", "puffin", "otter",
+	"cat in a box", "horse jumping", "duck pond", "spider in the bath",
 
-	// Animals doing things
-	"posh cat", "angry swan", "hungover owl", "suspicious hedgehog",
-	"flamingo in wellies", "bear in a hot tub", "penguin commute",
-	"squirrel heist", "otter holding hands", "fox in a bin",
-	"duck with attitude", "moose in a lift", "tortoise racing",
-	"hamster on a wheel", "llama drama",
+	// Everyday life
+	"queue", "shopping trolley", "school uniform", "lollipop lady",
+	"garden gnome", "wheelie bin", "washing line", "doorbell",
+	"roundabout", "zebra crossing", "parking meter", "speed camera",
+	"flat tyre", "broken umbrella", "lost keys", "missed bus",
+	"alarm clock", "packed lunch", "ironing", "hoovering",
 
-	// British culture
-	"queue jumper", "motorway services", "rainy barbecue",
-	"wonky shopping trolley", "warm pub pint", "dodgy tan lines",
-	"caravan holiday", "garden gnome", "passive-aggressive note",
-	"soggy camping trip", "roundabout rage", "charity shop bargain",
-	"school disco", "ice cream van", "village fete",
-	"car boot sale", "double decker bus", "phone box",
-	"red post box", "fish and chips",
+	// Sports & games
+	"football", "cricket bat", "tennis racket", "rugby tackle",
+	"darts", "snooker", "bowling", "swimming pool",
+	"golf", "skateboard", "fishing rod", "bicycle",
+	"rowing boat", "trophy", "medal", "referee",
 
-	// Easy-to-draw classics (keeping some for balance)
-	"volcano", "rocket", "treehouse", "haunted house",
-	"desert island", "snowman", "treasure map", "roller coaster",
-	"hot air balloon", "pirate ship", "dragon", "castle",
-	"UFO", "campfire", "lighthouse", "rainbow",
-	"palm tree", "igloo", "submarine", "catapult",
+	// Celebrations & culture
+	"Christmas tree", "fireworks", "Halloween pumpkin", "Easter egg",
+	"wedding cake", "party hat", "balloon animal", "disco ball",
+	"carol singers", "nativity", "maypole", "pancake day",
+	"fancy dress", "school disco", "village fete", "car boot sale",
+
+	// Jobs & people
+	"doctor", "firefighter", "astronaut", "pirate",
+	"wizard", "knight", "chef", "builder",
+	"postman", "farmer", "detective", "clown",
+	"lifeguard", "pilot", "dentist", "hairdresser",
+
+	// Things & objects
+	"treasure chest", "hot air balloon", "rocket", "pirate ship",
+	"treehouse", "robot", "telescope", "anchor",
+	"crown", "sword", "shield", "catapult",
+	"candle", "cuckoo clock", "jigsaw puzzle", "lava lamp",
+	"roller coaster", "haunted house", "UFO", "volcano",
+
+	// Funny scenes
+	"dad at the barbecue", "stepping on Lego", "dog stealing a sausage",
+	"wasp at a picnic", "burnt toast", "man vs seagull",
+	"slipping on a banana", "cat on a keyboard", "falling off a chair",
+	"pigeon on your head", "stuck in traffic", "tangled headphones",
+	"walking into a glass door", "sleeping on the train",
 }
 
 func RandomWords(n int) []string {
