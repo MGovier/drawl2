@@ -62,6 +62,7 @@ func (h *Handlers) CreateGame(w http.ResponseWriter, r *http.Request) {
 	gameCode = g.State.Code
 	log.Printf("[api] game created code=%s host=%q", gameCode, req.PlayerName)
 
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(createGameResponse{
 		Code:     g.State.Code,
 		Token:    host.Token,
@@ -105,6 +106,7 @@ func (h *Handlers) JoinGame(w http.ResponseWriter, r *http.Request) {
 	g.HandleJoin(player)
 	log.Printf("[api] player %q joined game %s", req.PlayerName, req.Code)
 
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(joinGameResponse{
 		Token:    player.Token,
 		PlayerID: player.ID,
@@ -112,6 +114,7 @@ func (h *Handlers) JoinGame(w http.ResponseWriter, r *http.Request) {
 }
 
 func httpError(w http.ResponseWriter, msg string, code int) {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
 	json.NewEncoder(w).Encode(map[string]string{"error": msg})
 }
